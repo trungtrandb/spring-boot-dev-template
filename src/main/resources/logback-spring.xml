@@ -1,0 +1,49 @@
+<configuration>
+    <springProperty name="name" source="spring.application.name"/>
+    <springProperty name="ip" source="ip"/>
+    <include resource="logback-appender/console-appender.xml" />
+    <include resource="logback-appender/loki-appender.xml" />
+<!--    <include resource="logback-appender/file-appender.xml" />-->
+
+    <logger name="jakarta.activation" level="WARN"/>
+    <logger name="jakarta.mail" level="WARN"/>
+    <logger name="jakarta.management.remote" level="WARN"/>
+    <logger name="jakarta.xml.bind" level="WARN"/>
+    <logger name="jdk.event.security" level="INFO"/>
+    <logger name="com.sun" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+    <logger name="org.postgresql" level="WARN"/>
+    <logger name="org.springframework" level="ERROR"/>
+    <logger name="org.springframework.security" level="ERROR"/>
+    <logger name="org.springframework.boot.autoconfigure.logging" level="INFO"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="io.swagger.v3" level="INFO"/>
+    <logger name="site.code4fun" level="DEBUG"/>
+
+    <springProfile name="!local">
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+<!--            <appender-ref ref="FILE"/>-->
+<!--            <appender-ref ref="LOKI"/>-->
+        </root>
+    </springProfile>
+
+    <springProfile name="local">
+        <include resource="org/springframework/boot/logging/logback/base.xml" />
+        <logger name="springframework.transaction" level="debug"/>
+        <logger name="org.hibernate.SQL" level="debug"/>
+        <logger name="org.hibernate.orm.jdbc.bind" level="trace" />
+
+        <logger name="org.hibernate.engine.transaction.internal.TransactionImpl" level="debug"/>
+        <logger name="org.springframework.orm.jpa.SharedEntityManagerCreator" level="info"/>
+
+        <logger name="org.hibernate.stat" level="debug" />
+        <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="info"/>
+        <logger name="org.hibernate.SQL_SLOW" level="info"/>
+        <logger name="org.hibernate.cache" level="debug" additivity="false"/>
+        <appender-ref ref="STDOUT"/>
+    </springProfile>
+</configuration>

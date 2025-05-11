@@ -1,0 +1,312 @@
+### Server Configuration ###
+server:
+  port: 8888
+  shutdown: graceful
+
+### Spring Configuration ###
+spring:
+  application:
+    version: @project.version@
+    name: @project.name@
+  profiles:
+    active: local
+  main:
+    lazy-initialization: false
+  quartz:
+    job-store-type: memory #jdbc
+    properties:
+      org.quartz.threadPool.threadCount: 1
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: false
+  flyway:
+    enabled: false 
+  # Security Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: <your_value>
+            clientSecret: <your_value>
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+          facebook:
+            clientId: <your_value>
+            clientSecret: <your_value>
+            scope:
+              - email
+              - public_profile
+          google:
+            clientId: <your_value>
+            clientSecret: <your_value>
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+
+  # Database Configuration
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://${ip}:3306/mySchema1
+    username: <your_value>
+    password: <your_value>
+    hikari:
+      auto-commit: false
+      data-source-properties:
+        autoReconnect: true
+        useServerPrepStmts: false
+        cachePrepStmts: true
+        prepStmtCacheSize: 500
+        rewriteBatchedStatements: true
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+
+  # JPA Configuration
+  jpa:
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        query:
+          plan_cache_max_size: 1000
+          fail_on_pagination_over_collection_fetch: true
+          in_clause_parameter_padding: true
+        jdbc:
+          batch_size: 50
+    show-sql: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+
+  # Redis Configuration
+  data:
+    redis:
+      url: <your_value>
+#      host: ${ip}
+#      password: <your_value>
+  kafka:
+    bootstrap-servers: ${ip}:9094
+    properties:
+      security.protocol: SASL_PLAINTEXT
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="<your_value>" password="<your_value>";
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: -1
+      retries: 1
+      properties:
+        request.timeout.ms: 10000
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        compression.type: snappy
+        batch.size: 16384
+        linger.ms: 5
+    consumer:
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: '*'
+        max.poll.records: 500
+        fetch.min.bytes: 1
+        fetch.max.wait.ms: 500
+
+  # RabbitMQ Configuration
+  rabbitmq:
+    host: ${ip}
+    port: 5672
+    username: <your_value>
+    password: <your_value>
+
+  # Elasticsearch Configuration
+  elasticsearch:
+    uris: ${ip}:9200
+    username: <your_value>
+    password: <your_value>
+
+  # Mail Configuration
+  mail:
+    port: 587
+    host: smtp.gmail.com
+    username: <your_value>
+    password: <your_value>
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  # File Upload Configuration
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  # Internationalization
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+
+  # Jackson Configuration
+  jackson:
+    deserialization:
+      read-unknown-enum-values-as-null: true
+      accept-empty-string-as-null-object: true
+
+### SpringDoc Configuration ###
+springdoc:
+  show-actuator: true
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
+### Management Configuration ###
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      probes:
+        enabled: true
+    prometheus:
+      access: unrestricted
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+### Domain Configuration ###
+second-level-domains: trungtq.io
+admin-domain: https://admin.${second-level-domains}
+shop-domain: https://${second-level-domains}
+api-domain: https://api.${second-level-domains}
+face-recognition-domain: https://recognition.${second-level-domains}
+yolo-domain: https://yolo.${second-level-domains}
+
+### Token Configuration ###
+token:
+  signing:
+    key: <your_value>
+
+### Payment Gateway Configuration ###
+vnpay:
+  terminal-id: <your_value>
+  secret-key: <your_value>
+  url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  query-url: https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
+  version: 2.1.0
+
+onepay:
+  access-code: <your_value>
+  secret-key: <your_value>
+  merchant: <your_value>
+  url: https://mtf.onepay.vn/vpcpay/vpcpay.op
+
+### Cloud Storage Configuration ###
+google-service-account:
+  default-region-name: US-CENTRAL1
+  project-id: <your_value>
+  bucket-name: <your_value>
+  firebase-admin-key: <your_value>
+
+### AWS Configuration ###
+aws:
+  cloud-watch:
+    group-name: <your_value>
+    stream-name: <your_value>
+    access-key-id: <your_value>
+    secret-access-key: <your_value>
+    region: us-east-1
+    bucket-name: <your_value>
+
+### Twilio Configuration ###
+twilio:
+  sv-id: <your_value>
+  user-name: <your_value>
+  password: <your_value>
+  phone-number: <your_value>
+
+### Shopify Configuration ###
+shopify:
+  client-id: <your_value>
+  client-secret: <your_value>
+
+### Mailchimp Configuration ###
+mailchimp:
+  api-key: <your_value>
+  server-prefix: us18
+
+### MinIO Configuration ###
+minio:
+  endpoint: https://minio.${second-level-domains}
+  bucket-name: <your_value>
+  access-key: <your_value>
+  secret-key: <your_value>
+
+### Shipping Configuration ###
+shipping:
+  ghn:
+    base-url: https://dev-online-gateway.ghn.vn/shiip/public-api
+    token: <your_value>
+    shop-id: <your_value>
+  ghtk: <your_value>
+
+### LangChain4j Configuration ###
+langchain4j:
+  openrouter:
+    api-key: <your_value>
+    base-url: https://openrouter.ai/api/v1
+  deep-seek:
+    api-key: <your_value>
+    base-url: https://api.deepseek.com/v1
+  google-ai-gemini:
+    api-key: <your_value>
+  anthropic:
+    api-key: <your_value>
+  engine-google-custom:
+    api-key: <your_value>
+    csi: <your_value>
+  search-engine-tavily:
+    api-key: <your_value>
+  open-ai:
+    chat-model:
+      api-key: <your_value>
+    image-model:
+      api-key: <your_value>
+      model-name: <your_value>
+
+### Logging Configuration ###
+logging:
+  level:
+    root: INFO
+    org.springframework: WARN
+    org.hibernate: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/application.log
+    max-size: 10MB
+    max-history: 30
+
+jasypt:
+  encryptor:
+    password: super-secret-password

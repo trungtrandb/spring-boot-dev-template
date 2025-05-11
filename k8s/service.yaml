@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: demo-service
+  labels:
+    app: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 8888
+      name: "http-service"
+      protocol: TCP
+      targetPort: "http-container"
+    - port: 8081
+      name: "metrics"
+      protocol: TCP
+      targetPort: "metrics"

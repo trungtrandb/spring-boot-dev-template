@@ -1,0 +1,9 @@
+#**/application-local.properties
+target/**
+.idea/**
+*.iml
+.DS_Store
+chromedriver
+chromedriver.*
+.vscode
+logs/**

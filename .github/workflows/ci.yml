@@ -1,0 +1,41 @@
+name: Build and Push Backend
+on: push
+env:
+  REGISTRY: "<REPLACE_WITH_YOUR_DOCKER_REGISTRY>"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Get short commit SHA
+        id: vars
+        run: |
+          short_sha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$short_sha" >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}:${{ env.COMMIT_SHORT_SHA }}
+      - name: "Git checkout k8s"
+        uses: "actions/checkout@v2"
+        with:
+          token: ${{ secrets.TOKEN }}
+          repository: "<REPLACE_WITH_YOUR_K8S_REPO>"
+      - name: "Update Deployment Image Tag"
+        working-directory: "backend"
+        run: |
+          kustomize edit set image ${{ env.REGISTRY }}:${{ env.COMMIT_SHORT_SHA }}
+      - name: "Push Updated Image Tag"
+        run: |
+          git config --global user.name "Github bot"
+          git config --global user.email "trungtrandb@users.noreply.github.com"
+          git commit -am "Update deployment image tag to ${{ env.COMMIT_SHORT_SHA }}"
+          git push

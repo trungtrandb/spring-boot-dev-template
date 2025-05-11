@@ -1,0 +1,15 @@
+insert into tbl_category (name, icon, status, slug) values ('Computers', 'MeatFish', 'ACTIVE', 'computers');
+insert into tbl_category (name, icon, status, slug) values ('Movies', 'ShoulderBags', 'DRAFT', 'movies');
+insert into tbl_category (name, icon, status, slug) values ('Grocery', 'HandBags', 'DRAFT', 'grocery');
+insert into tbl_category (name, icon, status, slug) values ('Electronics', 'ShoulderBags', 'DRAFT', 'electronics');
+insert into tbl_category (name, icon, status, slug) values ('Games', 'Purse', 'DRAFT', 'games');
+insert into tbl_category (name, icon, status, slug) values ('Outdoors', 'FruitsVegetable', 'ACTIVE', 'outdoors');
+insert into tbl_category (name, icon, status, slug) values ('Baby', 'FruitsVegetable', 'ACTIVE', 'baby');
+insert into tbl_category (name, icon, status, slug) values ('Toys', 'Accessories', 'DRAFT', 'toys');
+insert into tbl_category (name, icon, status, slug) values ('Musics', 'HandBags', 'ACTIVE', 'musics');
+insert into tbl_category (name, icon, status, slug) values ('Tools', 'MeatFish', 'DRAFT', 'tools');
+insert into tbl_category (name, icon, status, slug) values ('Jewelry', 'Accessories', 'DRAFT', 'jewelry');
+insert into tbl_category (name, icon, status, slug) values ('Books', 'MeatFish', 'ACTIVE', 'books');
+insert into tbl_category (name, icon, status, slug) values ('Automotive', 'ShoulderBags', 'DRAFT', 'automotive');
+insert into tbl_category (name, icon, status, slug) values ('Health', 'Accessories', 'ACTIVE', 'health');
+insert into tbl_category (name, icon, status, slug) values ('Clothing', 'FruitsVegetable', 'ACTIVE', 'clothing');

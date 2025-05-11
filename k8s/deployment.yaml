@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 1 # should be more than 1 to rolling update
+  revisionHistoryLimit: 1
+  strategy:
+    #    type: Recreate #Default is RollingUpdate
+    rollingUpdate:
+      # maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: backend # same as template.metadata.labels below
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets:
+        - name: dockersecret
+      restartPolicy: Always
+      # terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: demo-container
+          image: <your-registry>/<your-repo>:<your-tag>
+          env:
+            - name: jasypt.encryptor.password
+              value: "<your-encryption-password>" # change to your own password
+          ports:
+            - containerPort: 8888
+              name: "http-container"
+              protocol: TCP
+            - containerPort: 8081
+              name: "metrics"
+              protocol: TCP
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 10001
+            # readOnlyRootFilesystem: true
+          # resources:
+          #   limits:
+          #     cpu: "500m"
+          #     memory: "400Mi"
+          #   requests:
+          #     cpu: "100m"
+          #     memory: "300Mi"
+          # livenessProbe:
+          #   httpGet:
+          #     path: "/actuator/health/liveness"
+          #     port: "metrics"
+          #   failureThreshold: 2
+          #   periodSeconds: 10
+          # startupProbe:
+          #   httpGet:
+          #     path: "/actuator/health/liveness"
+          #     port: "metrics"
+          #   failureThreshold: 30
+          #   periodSeconds: 15
+          # readinessProbe:
+          #   httpGet:
+          #     path: "/actuator/health/readiness"
+          #     port: "metrics"
+          #   initialDelaySeconds: 20
+          #   failureThreshold: 2
+          #   periodSeconds: 10
+          # lifecycle:
+          #   preStop:
+          #     exec:
+          #       command: ["sh", "-c", "sleep 10"] 
